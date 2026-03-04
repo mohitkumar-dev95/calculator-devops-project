@@ -2,15 +2,14 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE_NAME = 'scientific-calculator'
-        GITHUB_REPO_URL = 'https://github.com/mohitkumar-dev95/calculator-devops-project.git'
+        DOCKER_IMAGE = "mohitkumar95/calculator"
     }
 
     stages {
 
         stage('Clone Git') {
             steps {
-                git branch: 'main', url: "${GITHUB_REPO_URL}"
+                git branch: 'main', url: 'https://github.com/mohitkumar-dev95/calculator-devops-project.git'
             }
         }
 
@@ -34,26 +33,36 @@ pipeline {
 
         stage('Build Docker Image') {
             steps {
-                script {
-                    docker.build("${DOCKER_IMAGE_NAME}", '.')
-                }
+                sh 'docker build -t scientific-calculator .'
+            }
+        }
+
+        stage('Tag Docker Image') {
+            steps {
+                sh 'docker tag scientific-calculator:latest $DOCKER_IMAGE:latest'
             }
         }
 
         stage('Push Docker Image') {
             steps {
-                sh 'docker tag scientific-calculator mohitkumar-dev95/calculator:latest'
-                sh 'docker push mohitkumar-dev95/calculator:latest'
+                sh 'docker push $DOCKER_IMAGE:latest'
             }
         }
 
         stage('Deploy with Ansible') {
             steps {
-                ansiblePlaybook(
-                    playbook: 'deploy.yml',
-                    inventory: 'inventory'
-                )
+                sh 'ansible-playbook -i inventory deploy.yml'
             }
+        }
+    }
+
+    post {
+        success {
+            echo "Pipeline executed successfully!"
+        }
+
+        failure {
+            echo "Pipeline failed. Check logs."
         }
     }
 }
