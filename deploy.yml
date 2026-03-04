@@ -1,0 +1,21 @@
+---
+- name: Deploy Calculator App with Docker
+  hosts: localhost
+  become: no
+  tasks:
+
+    - name: Install Docker
+      apt:
+        name: docker.io
+        state: present
+
+    - name: Pull Docker Image
+      command: docker pull mohitkumar-dev95/calculator:latest
+
+    - name: Stop old container
+      shell: |
+        docker stop calculator || true
+        docker rm calculator || true
+
+    - name: Run container
+      shell: docker run -it -d --name calculator mohitkumar-dev95/calculator
