@@ -10,7 +10,7 @@
         state: present
 
     - name: Pull Docker Image
-      command: docker pull mohitkumar-dev95/calculator:latest
+      command: docker pull mohitkumar95/calculator:latest
 
     - name: Stop old container
       shell: |
