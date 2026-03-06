@@ -57,12 +57,40 @@ pipeline {
     }
 
     post {
+
         success {
             echo "Pipeline executed successfully!"
+
+            mail to: 'mohitkumar300795@gmail.com',
+                 subject: "Jenkins Build SUCCESS - Scientific Calculator",
+                 body: """
+Pipeline Status: SUCCESS
+
+Project: Scientific Calculator DevOps Pipeline
+Job Name: ${env.JOB_NAME}
+Build Number: ${env.BUILD_NUMBER}
+
+Docker Image: ${DOCKER_IMAGE}:latest
+Deployment: Completed Successfully
+
+Check Jenkins for details.
+"""
         }
 
         failure {
             echo "Pipeline failed. Check logs."
+
+            mail to: 'mohitkumar300795@gmail.com',
+                 subject: "Jenkins Build FAILED - Scientific Calculator",
+                 body: """
+Pipeline Status: FAILED
+
+Project: Scientific Calculator DevOps Pipeline
+Job Name: ${env.JOB_NAME}
+Build Number: ${env.BUILD_NUMBER}
+
+Please check Jenkins logs for errors.
+"""
         }
     }
 }
