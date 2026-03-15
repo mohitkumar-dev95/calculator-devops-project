@@ -18,4 +18,4 @@
         docker rm calculator || true
 
     - name: Run container
-      shell: docker run -it -d --name calculator mohitkumar-dev95/calculator
+      shell: docker run -it -d --name calculator mohitkumar95/calculator
